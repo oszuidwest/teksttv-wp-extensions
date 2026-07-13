@@ -156,6 +156,21 @@ jobs:
             /tmp/teksttv-wp-extensions.pot > /tmp/generated.pot
           diff -u /tmp/committed.pot /tmp/generated.pot
 
+      - name: Configure the Plugin Check environment
+        if: steps.decide.outputs.release_needed == 'true'
+        run: |
+          cat > .wp-env.json <<'JSON'
+          {
+            "core": null,
+            "port": 8880,
+            "testsPort": 8881,
+            "mappings": {
+              "wp-content/plugins/teksttv-wp-extensions": ".",
+              "wp-content/plugins/teksttv": "./upstream/teksttv"
+            }
+          }
+          JSON
+
       - name: WordPress Plugin Check
         if: steps.decide.outputs.release_needed == 'true'
         uses: wordpress/plugin-check-action@98a1788320d0add90df2d8183934ecccbc4e05d2 # v1.3.0

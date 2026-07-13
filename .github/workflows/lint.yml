@@ -59,6 +59,29 @@ jobs:
       - name: PHPUnit
         run: composer test -- --no-coverage
 
+      - name: Check out the TekstTV dependency
+        if: matrix.php == '8.4'
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: oszuidwest/teksttv-wp-plugin
+          ref: ${{ env.TEKSTTV_COMMIT }}
+          path: upstream/teksttv
+
+      - name: Configure the Plugin Check environment
+        if: matrix.php == '8.4'
+        run: |
+          cat > .wp-env.json <<'JSON'
+          {
+            "core": null,
+            "port": 8880,
+            "testsPort": 8881,
+            "mappings": {
+              "wp-content/plugins/teksttv-wp-extensions": ".",
+              "wp-content/plugins/teksttv": "./upstream/teksttv"
+            }
+          }
+          JSON
+
       - name: WordPress Plugin Check
         if: matrix.php == '8.4'
         uses: wordpress/plugin-check-action@98a1788320d0add90df2d8183934ecccbc4e05d2 # v1.3.0
@@ -68,6 +91,7 @@ jobs:
             scripts/check-coverage.php
             stubs/
             tests/
+            upstream/
           exclude-checks: |
             file_type
             plugin_readme
