@@ -105,7 +105,7 @@ jobs:
           wp-env run cli wp plugin install plugin-check --version=2.0.0 --activate
           wp-env run cli wp plugin activate teksttv
           wp-env run cli wp plugin activate teksttv-wp-extensions
-          wp-env run cli wp plugin check \
+          wp-env run cli wp plugin check teksttv-wp-extensions \
             --slug=teksttv-wp-extensions \
             --exclude-files=scripts/check-coverage.php,stubs/,tests/,upstream/ \
             --exclude-checks=file_type,plugin_readme,plugin_updater
