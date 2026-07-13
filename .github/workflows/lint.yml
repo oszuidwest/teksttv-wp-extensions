@@ -107,7 +107,8 @@ jobs:
           wp-env run cli wp plugin activate teksttv-wp-extensions
           wp-env run cli wp plugin check teksttv-wp-extensions \
             --slug=teksttv-wp-extensions \
-            --exclude-files=scripts/check-coverage.php,stubs/,tests/,upstream/ \
+            --exclude-files=scripts/check-coverage.php \
+            --exclude-directories=stubs,tests,upstream,vendor \
             --exclude-checks=file_type,plugin_readme,plugin_updater
 
       - name: Stop the Plugin Check environment
