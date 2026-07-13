@@ -166,7 +166,7 @@ jobs:
           {
             "core": null,
             "port": 8880,
-            "testsPort": 8881,
+            "testsEnvironment": false,
             "mappings": {
               "wp-content/plugins/teksttv-wp-extensions": ".",
               "wp-content/plugins/teksttv": "./upstream/teksttv"
