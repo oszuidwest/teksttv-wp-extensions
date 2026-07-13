@@ -1,0 +1,22 @@
+<?php
+
+namespace Streekomroep;
+
+class BroadcastSchedule
+{
+    public function getCurrentRadioBroadcast(): mixed
+    {
+    }
+
+    public function getNextRadioBroadcast(): mixed
+    {
+    }
+
+    public function getToday(): mixed
+    {
+    }
+
+    public function getTomorrow(): mixed
+    {
+    }
+}

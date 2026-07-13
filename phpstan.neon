@@ -1,0 +1,13 @@
+parameters:
+    level: 8
+    tmpDir: .phpstan-cache
+    paths:
+        - teksttv-wp-extensions.php
+        - src/
+    bootstrapFiles:
+        - tests/stubs/BlockRegistry.php
+        - tests/stubs/RestApi.php
+    scanFiles:
+        - stubs/streekomroep.stub
+    scanDirectories:
+        - vendor/php-stubs/
