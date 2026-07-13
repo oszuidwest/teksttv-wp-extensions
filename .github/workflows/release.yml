@@ -171,20 +171,31 @@ jobs:
           }
           JSON
 
+      - name: Set up Node for Plugin Check
+        if: steps.decide.outputs.release_needed == 'true'
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.0.0
+        with:
+          node-version: '24'
+
+      - name: Install Plugin Check tooling
+        if: steps.decide.outputs.release_needed == 'true'
+        run: npm install --global @wordpress/env@11.10.0
+
       - name: WordPress Plugin Check
         if: steps.decide.outputs.release_needed == 'true'
-        uses: wordpress/plugin-check-action@98a1788320d0add90df2d8183934ecccbc4e05d2 # v1.3.0
-        with:
-          slug: teksttv-wp-extensions
-          exclude-files: |
-            scripts/check-coverage.php
-            stubs/
-            tests/
-            upstream/
-          exclude-checks: |
-            file_type
-            plugin_readme
-            plugin_updater
+        run: |
+          wp-env start --update
+          wp-env run cli wp plugin install plugin-check --version=2.0.0 --activate
+          wp-env run cli wp plugin activate teksttv
+          wp-env run cli wp plugin activate teksttv-wp-extensions
+          wp-env run cli wp plugin check \
+            --slug=teksttv-wp-extensions \
+            --exclude-files=scripts/check-coverage.php,stubs/,tests/,upstream/ \
+            --exclude-checks=file_type,plugin_readme,plugin_updater
+
+      - name: Stop the Plugin Check environment
+        if: ${{ always() && steps.decide.outputs.release_needed == 'true' }}
+        run: wp-env stop
 
       - name: Build allowlisted release package
         if: steps.decide.outputs.release_needed == 'true'
