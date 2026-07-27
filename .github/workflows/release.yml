@@ -33,19 +33,19 @@ jobs:
           echo "::error::Releases must be dispatched from the main branch."
           exit 1
 
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
 
       - name: Check out TekstTV extension API
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: oszuidwest/teksttv-wp-plugin
           ref: ${{ env.TEKSTTV_COMMIT }}
           path: upstream/teksttv
 
       - name: Check out Streekomroep schedule API
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: oszuidwest/streekomroep-wp
           ref: ${{ env.STREEKOMROEP_COMMIT }}
