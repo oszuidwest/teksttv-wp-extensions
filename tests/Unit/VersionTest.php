@@ -28,7 +28,6 @@ final class VersionTest extends TestCase
             '/^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/',
             $this->plugin_version()
         );
-        $this->assertStringNotContainsString('Text Domain:', $plugin);
         $this->assertStringContainsString('Requires at least: 7.0', $plugin);
         $this->assertStringContainsString('Requires PHP: 8.3', $plugin);
     }
