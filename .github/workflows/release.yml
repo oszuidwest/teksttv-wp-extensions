@@ -16,10 +16,6 @@ concurrency:
   group: release
   cancel-in-progress: false
 
-env:
-  TEKSTTV_COMMIT: d1e909e179ae2699a9dc306ab64c00848ee3168c
-  STREEKOMROEP_COMMIT: c25bdeb3664cd5557d1c90402ccbdc632060a582
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -41,14 +37,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: oszuidwest/teksttv-wp-plugin
-          ref: ${{ env.TEKSTTV_COMMIT }}
           path: upstream/teksttv
 
       - name: Check out Streekomroep schedule API
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: oszuidwest/streekomroep-wp
-          ref: ${{ env.STREEKOMROEP_COMMIT }}
           path: upstream/streekomroep
 
       - name: Extract and validate version

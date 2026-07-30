@@ -39,7 +39,7 @@ composer security
 
 `composer contract` additionally verifies the extension against real checkouts of the TekstTV plugin and Streekomroep theme. Set `TEKSTTV_PATH` and `STREEKOMROEP_PATH` to those checkout directories before running it locally.
 
-CI runs PHP syntax validation, Composer validation and auditing, PHP_CodeSniffer, PHPStan, strict PHPUnit tests, WordPress Plugin Check, a 90% line-coverage gate, and the pinned upstream contract test. Plugin Check's `i18n_usage` check is intentionally excluded for this Dutch-only plugin. PHP behavior is tested on PHP 8.3 and 8.4. GitHub Actions are pinned to immutable commits, and Dependabot checks Composer and GitHub Actions dependencies every Monday.
+CI runs PHP syntax validation, Composer validation and auditing, PHP_CodeSniffer, PHPStan, strict PHPUnit tests, WordPress Plugin Check, a 90% line-coverage gate, and the current upstream contract test. Plugin Check's `i18n_usage` check is intentionally excluded for this Dutch-only plugin. PHP behavior is tested on PHP 8.3 and 8.4. GitHub Actions are pinned to immutable commits, and Dependabot checks Composer and GitHub Actions dependencies every Monday.
 
 ## Release
 
