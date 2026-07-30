@@ -15,13 +15,6 @@ namespace ZuidWest\TekstTVExtensions;
 final class Plugin
 {
     /**
-     * Shared ticker block registrar.
-     *
-     * @var ScheduleTickerBlocks|null
-     */
-    private static ?ScheduleTickerBlocks $ticker_blocks = null;
-
-    /**
      * Register the plugin's WordPress hooks.
      */
     public static function init(): void
@@ -39,8 +32,7 @@ final class Plugin
             return;
         }
 
-        self::$ticker_blocks ??= new ScheduleTickerBlocks();
-        self::$ticker_blocks->register();
+        (new ScheduleTickerBlocks())->register();
     }
 
     /**

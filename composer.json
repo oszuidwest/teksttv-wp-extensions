@@ -35,7 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "ZuidWest\\TekstTVExtensions\\Tests\\": "tests/"
+            "ZuidWest\\TekstTVExtensions\\Tests\\Unit\\": "tests/Unit/"
         }
     },
     "config": {

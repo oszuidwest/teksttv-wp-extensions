@@ -8,8 +8,6 @@ use Brain\Monkey;
 use Brain\Monkey\Actions;
 use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
-use ReflectionProperty;
-use Streekomroep\BroadcastSchedule;
 use TekstTV\BlockRegistry;
 use ZuidWest\TekstTVExtensions\Plugin;
 
@@ -19,9 +17,6 @@ final class PluginTest extends TestCase
     {
         parent::setUp();
         Monkey\setUp();
-
-        $ticker_blocks = new ReflectionProperty(Plugin::class, 'ticker_blocks');
-        $ticker_blocks->setValue(null, null);
         BlockRegistry::$types = [];
     }
 
@@ -71,9 +66,6 @@ final class PluginTest extends TestCase
             ->once()
             ->with('activate_plugins')
             ->andReturn(true);
-
-        $this->assertTrue(class_exists(BlockRegistry::class));
-        $this->assertTrue(class_exists(BroadcastSchedule::class));
 
         ob_start();
         Plugin::render_dependency_notice();

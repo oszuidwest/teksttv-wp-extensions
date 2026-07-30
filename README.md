@@ -31,19 +31,17 @@ The production plugin has no Composer dependencies. Composer is only required fo
 
 ```bash
 composer install
-composer check
-composer analyse
-composer test
+composer quality
 composer security
 ```
 
 `composer contract` additionally verifies the extension against real checkouts of the TekstTV plugin and Streekomroep theme. Set `TEKSTTV_PATH` and `STREEKOMROEP_PATH` to those checkout directories before running it locally.
 
-CI runs PHP syntax validation, Composer validation and auditing, PHP_CodeSniffer, PHPStan, strict PHPUnit tests, WordPress Plugin Check, a 90% line-coverage gate, and the current upstream contract test. Plugin Check's `i18n_usage` check is intentionally excluded for this Dutch-only plugin. PHP behavior is tested on PHP 8.3 and 8.4. GitHub Actions are pinned to immutable commits, and Dependabot checks Composer and GitHub Actions dependencies every Monday.
+CI tests PHP 8.3 and 8.4, enforces 90% line coverage, runs WordPress Plugin Check, and verifies the current upstream APIs. Plugin Check's `i18n_usage` check is excluded because the plugin is intentionally Dutch-only.
 
 ## Release
 
-The release workflow reads the version from `teksttv-wp-extensions.php` and can only be dispatched manually from `main`. It repeats the complete quality and upstream contract gates before packaging. The allowlisted archive contains only `teksttv-wp-extensions.php`, `README.md`, and `src/`; tests, stubs, Composer tooling, and CI files cannot enter the release. The workflow creates a SHA-256 checksum, tags only after the package has passed validation, and refuses to overwrite an existing GitHub Release. The `force` input is limited to recovering a missing release for the current version.
+After updating the plugin header version, dispatch the release workflow from `main`. It validates the plugin and publishes an archive containing only `teksttv-wp-extensions.php`, `README.md`, and `src/`.
 
 ## Behaviour
 

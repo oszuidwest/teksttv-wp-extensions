@@ -27,6 +27,6 @@ $covered = (int) $metrics['coveredstatements'];
 $coverage = $statements === 0 ? 100.0 : ($covered / $statements) * 100;
 
 printf("Line coverage: %.2f%% (%d/%d), required: %.2f%%\n", $coverage, $covered, $statements, $minimum);
-if ($coverage + 0.00001 < $minimum) {
+if ($coverage < $minimum) {
     exit(1);
 }
