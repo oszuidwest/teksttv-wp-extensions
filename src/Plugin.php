@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace ZuidWest\TekstTVExtensions;
 
 /**
- * Boots the plugin and coordinates cache invalidation.
+ * Boots the plugin and coordinates dependency handling.
  */
 final class Plugin
 {
@@ -22,23 +22,12 @@ final class Plugin
     private static ?ScheduleTickerBlocks $ticker_blocks = null;
 
     /**
-     * Whether the TekstTV cache was invalidated during this request.
-     *
-     * @var bool
-     */
-    private static bool $cache_invalidated = false;
-
-    /**
      * Register the plugin's WordPress hooks.
      */
     public static function init(): void
     {
         add_action('init', [self::class, 'register_ticker_blocks'], 10);
         add_action('admin_notices', [self::class, 'render_dependency_notice']);
-
-        add_action('save_post_fm', [self::class, 'invalidate_slides_cache']);
-        add_action('save_post_tv', [self::class, 'invalidate_slides_cache']);
-        add_action('acf/save_post', [self::class, 'maybe_invalidate_options_cache'], 20);
     }
 
     /**
@@ -65,10 +54,10 @@ final class Plugin
 
         $missing = [];
         if (!class_exists(\TekstTV\BlockRegistry::class)) {
-            $missing[] = __('TekstTV', 'teksttv-wp-extensions');
+            $missing[] = 'TekstTV';
         }
         if (!class_exists(\Streekomroep\BroadcastSchedule::class)) {
-            $missing[] = __('the Streekomroep theme', 'teksttv-wp-extensions');
+            $missing[] = 'het Streekomroep-thema';
         }
 
         if ($missing === []) {
@@ -79,36 +68,10 @@ final class Plugin
             '<div class="notice notice-warning"><p>%s</p></div>',
             esc_html(
                 sprintf(
-                    /* translators: %s: comma-separated list of missing dependencies. */
-                    __('TekstTV Streekomroep Extensions is inactive. Missing dependencies: %s.', 'teksttv-wp-extensions'),
+                    'TekstTV Streekomroep Extensions is inactief. Ontbrekende afhankelijkheden: %s.',
                     implode(', ', $missing)
                 )
             )
         );
-    }
-
-    /**
-     * Invalidate cached REST output after a radio or television post changes.
-     */
-    public static function invalidate_slides_cache(): void
-    {
-        if (self::$cache_invalidated || !class_exists(\TekstTV\RestApi::class)) {
-            return;
-        }
-
-        \TekstTV\RestApi::invalidate_slides_cache();
-        self::$cache_invalidated = true;
-    }
-
-    /**
-     * ACF stores the shared radio and television schedules as options.
-     *
-     * @param int|string $post_id ACF object identifier.
-     */
-    public static function maybe_invalidate_options_cache(int|string $post_id): void
-    {
-        if ($post_id === 'option' || $post_id === 'options') {
-            self::invalidate_slides_cache();
-        }
     }
 }

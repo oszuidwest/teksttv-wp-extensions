@@ -43,18 +43,6 @@ if (!function_exists('wp_parse_args')) {
     }
 }
 
-if (!function_exists('__')) {
-    /**
-     * Minimal translation stub for the contract process.
-     *
-     * @param string $text Text to translate.
-     */
-    function __(string $text): string
-    {
-        return $text;
-    }
-}
-
 if (!function_exists('do_action')) {
     /**
      * Minimal action stub for the contract process.
@@ -133,13 +121,13 @@ teksttv_wp_extensions_contract_assert(
 );
 teksttv_wp_extensions_contract_assert(
     BlockRegistry::build('streekomroep_ticker_current_fm', [], 'tv1') === [
-        ['message' => 'Now on FM: Morning Show'],
+        ['message' => 'Nu op FM: Morning Show'],
     ],
     'the current FM ticker output no longer matches the real registry contract'
 );
 teksttv_wp_extensions_contract_assert(
     BlockRegistry::build('streekomroep_ticker_today_tv', [], 'tv1') === [
-        ['message' => 'Today on TV: News'],
+        ['message' => 'Vandaag op TV: News'],
     ],
     'the television ticker output no longer matches the real registry contract'
 );

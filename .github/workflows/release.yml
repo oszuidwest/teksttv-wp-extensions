@@ -16,10 +16,6 @@ concurrency:
   group: release
   cancel-in-progress: false
 
-env:
-  TEKSTTV_COMMIT: 3a29ad217caecea5ea6f34a8ba12e3ce308bd2f0
-  STREEKOMROEP_COMMIT: 2628ba7ec275a4dba566e3bb15212f5ae476034c
-
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -41,14 +37,12 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: oszuidwest/teksttv-wp-plugin
-          ref: ${{ env.TEKSTTV_COMMIT }}
           path: upstream/teksttv
 
       - name: Check out Streekomroep schedule API
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           repository: oszuidwest/streekomroep-wp
-          ref: ${{ env.STREEKOMROEP_COMMIT }}
           path: upstream/streekomroep
 
       - name: Extract and validate version
@@ -124,7 +118,7 @@ jobs:
         with:
           php-version: '8.3'
           coverage: none
-          tools: composer:v2, wp-cli
+          tools: composer:v2
 
       - name: Install development dependencies
         if: steps.decide.outputs.release_needed == 'true'
@@ -143,21 +137,6 @@ jobs:
         env:
           TEKSTTV_PATH: upstream/teksttv
           STREEKOMROEP_PATH: upstream/streekomroep
-
-      - name: Verify translation template
-        if: steps.decide.outputs.release_needed == 'true'
-        run: |
-          wp i18n make-pot . /tmp/teksttv-wp-extensions.pot \
-            --slug=teksttv-wp-extensions \
-            --domain=teksttv-wp-extensions \
-            --include=src,teksttv-wp-extensions.php \
-            --exclude=vendor,tests,stubs,dist,upstream \
-            --skip-audit
-          sed -E '/POT-Creation-Date:|X-Generator:/d' \
-            languages/teksttv-wp-extensions.pot > /tmp/committed.pot
-          sed -E '/POT-Creation-Date:|X-Generator:/d' \
-            /tmp/teksttv-wp-extensions.pot > /tmp/generated.pot
-          diff -u /tmp/committed.pot /tmp/generated.pot
 
       - name: Configure the Plugin Check environment
         if: steps.decide.outputs.release_needed == 'true'
@@ -195,7 +174,7 @@ jobs:
             --slug=teksttv-wp-extensions \
             --exclude-files=scripts/check-coverage.php \
             --exclude-directories=stubs,tests,upstream,vendor \
-            --exclude-checks=file_type,plugin_readme,plugin_updater
+            --exclude-checks=file_type,i18n_usage,plugin_readme,plugin_updater
 
       - name: Stop the Plugin Check environment
         if: ${{ always() && steps.decide.outputs.release_needed == 'true' }}
@@ -217,7 +196,6 @@ jobs:
           grep -qx 'teksttv-wp-extensions/teksttv-wp-extensions.php' /tmp/package-files.txt
           grep -qx 'teksttv-wp-extensions/README.md' /tmp/package-files.txt
           grep -q '^teksttv-wp-extensions/src/' /tmp/package-files.txt
-          grep -q '^teksttv-wp-extensions/languages/' /tmp/package-files.txt
           if grep -Eq '/(tests|stubs|vendor|upstream|\.github|scripts)/|/(composer|phpcs|phpstan|phpunit)' /tmp/package-files.txt; then
             echo "::error::Development files found in the release package."
             cat /tmp/package-files.txt

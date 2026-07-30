@@ -28,7 +28,6 @@ final class VersionTest extends TestCase
             '/^\d+\.\d+\.\d+(?:-(?:alpha|beta|rc)\.\d+)?$/',
             $this->plugin_version()
         );
-        $this->assertStringContainsString('Text Domain: teksttv-wp-extensions', $plugin);
         $this->assertStringContainsString('Requires at least: 7.0', $plugin);
         $this->assertStringContainsString('Requires PHP: 8.3', $plugin);
     }
@@ -44,17 +43,5 @@ final class VersionTest extends TestCase
         $this->assertIsArray($composer);
         $this->assertSame('oszuidwest/teksttv-wp-extensions', $composer['name'] ?? null);
         $this->assertFileExists(dirname(__DIR__, 2) . '/teksttv-wp-extensions.php');
-    }
-
-    public function test_translation_template_follows_the_header_version(): void
-    {
-        $pot = file_get_contents(dirname(__DIR__, 2) . '/languages/teksttv-wp-extensions.pot');
-
-        $this->assertIsString($pot);
-        $this->assertStringContainsString(
-            'Project-Id-Version: TekstTV Streekomroep Extensions ' . $this->plugin_version() . '\\n',
-            $pot
-        );
-        $this->assertStringContainsString('X-Domain: teksttv-wp-extensions\\n', $pot);
     }
 }

@@ -6,7 +6,6 @@ namespace ZuidWest\TekstTVExtensions\Tests\Unit;
 
 use Brain\Monkey;
 use Brain\Monkey\Actions;
-use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use TekstTV\BlockRegistry;
@@ -20,8 +19,6 @@ final class ScheduleTickerBlocksTest extends TestCase
         parent::setUp();
         Monkey\setUp();
         BlockRegistry::$types = [];
-
-        Functions\when('__')->returnArg();
     }
 
     protected function tearDown(): void
@@ -37,10 +34,10 @@ final class ScheduleTickerBlocksTest extends TestCase
 
         $this->assertSame(
             [
-                'streekomroep_ticker_current_fm' => 'Now on FM',
-                'streekomroep_ticker_next_fm' => 'Next on FM',
-                'streekomroep_ticker_today_tv' => 'Today on TV',
-                'streekomroep_ticker_tomorrow_tv' => 'Tomorrow on TV',
+                'streekomroep_ticker_current_fm' => 'Nu op FM',
+                'streekomroep_ticker_next_fm' => 'Straks op FM',
+                'streekomroep_ticker_today_tv' => 'Vandaag op TV',
+                'streekomroep_ticker_tomorrow_tv' => 'Morgen op TV',
             ],
             array_map(static fn (array $type): string => $type['label'], BlockRegistry::$types)
         );
@@ -94,11 +91,11 @@ final class ScheduleTickerBlocksTest extends TestCase
         $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $schedule);
 
         $this->assertSame(
-            [['message' => 'Now on FM: Morning Show']],
+            [['message' => 'Nu op FM: Morning Show']],
             $blocks->build_current_fm([], 'tv1')
         );
         $this->assertSame(
-            [['message' => 'Next on FM: Lunchtime Radio']],
+            [['message' => 'Straks op FM: Lunchtime Radio']],
             $blocks->build_next_fm([], 'tv1')
         );
     }
@@ -134,11 +131,11 @@ final class ScheduleTickerBlocksTest extends TestCase
         $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $schedule);
 
         $this->assertSame(
-            [['message' => 'Today on TV: News'], ['message' => 'Today on TV: Sports']],
+            [['message' => 'Vandaag op TV: News'], ['message' => 'Vandaag op TV: Sports']],
             $blocks->build_today_tv([], 'tv1')
         );
         $this->assertSame(
-            [['message' => 'Tomorrow on TV: Documentary']],
+            [['message' => 'Morgen op TV: Documentary']],
             $blocks->build_tomorrow_tv([], 'tv1')
         );
     }

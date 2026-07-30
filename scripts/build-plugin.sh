@@ -35,10 +35,6 @@ runtime_paths=(
 	"src"
 )
 
-if [ -d languages ]; then
-	runtime_paths+=("languages")
-fi
-
 rsync -a "${runtime_paths[@]}" "$STAGING_DIR/"
 find "$STAGING_DIR" -name '.DS_Store' -delete
 
