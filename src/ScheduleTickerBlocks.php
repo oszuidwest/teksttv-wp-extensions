@@ -124,7 +124,8 @@ final class ScheduleTickerBlocks
                 return [];
             }
 
-            return $this->message('Nu op FM: ', $broadcast->getName());
+            $message = $this->message('Nu op FM: ', $broadcast->getName());
+            return $message === null ? [] : [$message];
         });
     }
 
@@ -143,7 +144,8 @@ final class ScheduleTickerBlocks
                 return [];
             }
 
-            return $this->message('Straks op FM: ', $broadcast->getName());
+            $message = $this->message('Straks op FM: ', $broadcast->getName());
+            return $message === null ? [] : [$message];
         });
     }
 
@@ -210,14 +212,7 @@ final class ScheduleTickerBlocks
         }
 
         try {
-            $schedule = ($this->schedule_factory)();
-            if (!$schedule instanceof Schedule) {
-                $this->schedule_failed = true;
-                $this->report_error(new \UnexpectedValueException('The schedule factory must return a Schedule.'));
-                return null;
-            }
-
-            $this->schedule = $schedule;
+            $this->schedule = ($this->schedule_factory)();
             return $this->schedule;
         } catch (Throwable $exception) {
             $this->schedule_failed = true;
@@ -245,7 +240,10 @@ final class ScheduleTickerBlocks
                 continue;
             }
 
-            $messages = array_merge($messages, $this->message($prefix, $broadcast->name ?? null));
+            $message = $this->message($prefix, $broadcast->name ?? null);
+            if ($message !== null) {
+                $messages[] = $message;
+            }
         }
 
         return $messages;
@@ -256,16 +254,16 @@ final class ScheduleTickerBlocks
      *
      * @param string $prefix Message prefix.
      * @param mixed  $name   Programme name.
-     * @return list<array{message: string}>
+     * @return array{message: string}|null
      */
-    private function message(string $prefix, mixed $name): array
+    private function message(string $prefix, mixed $name): ?array
     {
         if (!is_string($name) && !is_numeric($name)) {
-            return [];
+            return null;
         }
 
         $name = trim((string) $name);
-        return $name === '' ? [] : [['message' => $prefix . $name]];
+        return $name === '' ? null : ['message' => $prefix . $name];
     }
 
     /**

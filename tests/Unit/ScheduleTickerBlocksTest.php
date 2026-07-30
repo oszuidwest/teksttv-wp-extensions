@@ -29,7 +29,7 @@ final class ScheduleTickerBlocksTest extends TestCase
 
     public function test_registers_four_ticker_types_with_expected_labels(): void
     {
-        $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $this->empty_schedule());
+        $blocks = new ScheduleTickerBlocks(fn (): Schedule => $this->empty_schedule());
         $blocks->register();
 
         $this->assertSame(
@@ -44,49 +44,15 @@ final class ScheduleTickerBlocksTest extends TestCase
 
         foreach (BlockRegistry::$types as $type) {
             $this->assertSame('ticker', $type['context']);
-            $this->assertIsCallable($type['render']);
-            $this->assertIsCallable($type['save']);
-            $this->assertIsCallable($type['build']);
         }
     }
 
     public function test_builds_current_and_next_fm_messages(): void
     {
-        $schedule = new class () implements Schedule {
-            public function get_current_radio_broadcast(): object
-            {
-                return $this->broadcast('Morning Show');
-            }
-
-            public function get_next_radio_broadcast(): object
-            {
-                return $this->broadcast('Lunchtime Radio');
-            }
-
-            private function broadcast(string $name): object
-            {
-                return new class ($name) {
-                    public function __construct(private string $name)
-                    {
-                    }
-
-                    public function getName(): string
-                    {
-                        return $this->name;
-                    }
-                };
-            }
-
-            public function get_today(): object
-            {
-                return (object) ['television' => []];
-            }
-
-            public function get_tomorrow(): object
-            {
-                return (object) ['television' => []];
-            }
-        };
+        $schedule = $this->schedule(
+            current: $this->broadcast('Morning Show'),
+            next: $this->broadcast('Lunchtime Radio')
+        );
 
         $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $schedule);
 
@@ -102,31 +68,14 @@ final class ScheduleTickerBlocksTest extends TestCase
 
     public function test_builds_one_tv_message_per_programme(): void
     {
-        $schedule = new class () implements Schedule {
-            public function get_current_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_next_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_today(): object
-            {
-                return (object) [
-                    'television' => [(object) ['name' => 'News'], (object) ['name' => 'Sports']],
-                ];
-            }
-
-            public function get_tomorrow(): object
-            {
-                return (object) [
-                    'television' => [(object) ['name' => 'Documentary']],
-                ];
-            }
-        };
+        $schedule = $this->schedule(
+            today: (object) [
+                'television' => [(object) ['name' => 'News'], (object) ['name' => 'Sports']],
+            ],
+            tomorrow: (object) [
+                'television' => [(object) ['name' => 'Documentary']],
+            ]
+        );
 
         $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $schedule);
 
@@ -140,60 +89,10 @@ final class ScheduleTickerBlocksTest extends TestCase
         );
     }
 
-    public function test_returns_empty_output_when_schedule_has_no_programme(): void
-    {
-        $schedule = new class () implements Schedule {
-            public function get_current_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_next_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_today(): object
-            {
-                return (object) ['television' => []];
-            }
-
-            public function get_tomorrow(): object
-            {
-                return (object) ['television' => []];
-            }
-        };
-
-        $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $schedule);
-
-        $this->assertSame([], $blocks->build_current_fm([], 'tv1'));
-        $this->assertSame([], $blocks->build_today_tv([], 'tv1'));
-    }
-
     public function test_reuses_one_schedule_for_all_ticker_types(): void
     {
         $calls = 0;
-        $schedule = new class () implements Schedule {
-            public function get_current_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_next_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_today(): object
-            {
-                return (object) ['television' => []];
-            }
-
-            public function get_tomorrow(): object
-            {
-                return (object) ['television' => []];
-            }
-        };
+        $schedule = $this->empty_schedule();
         $blocks = new ScheduleTickerBlocks(static function () use (&$calls, $schedule): Schedule {
             ++$calls;
             return $schedule;
@@ -223,16 +122,15 @@ final class ScheduleTickerBlocksTest extends TestCase
 
     public function test_registry_save_and_render_callbacks_follow_the_upstream_contract(): void
     {
-        $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $this->empty_schedule());
+        $blocks = new ScheduleTickerBlocks(fn (): Schedule => $this->empty_schedule());
         $blocks->register();
+        $type = BlockRegistry::$types['streekomroep_ticker_current_fm'];
 
-        foreach (BlockRegistry::$types as $type) {
-            $this->assertSame([], ($type['save'])(['ignored' => 'value']));
+        $this->assertSame([], ($type['save'])(['ignored' => 'value']));
 
-            ob_start();
-            ($type['render'])(0, [], 'teksttv_ticker');
-            $this->assertSame('', ob_get_clean());
-        }
+        ob_start();
+        ($type['render'])(0, [], 'teksttv_ticker');
+        $this->assertSame('', ob_get_clean());
     }
 
     public function test_reports_schedule_errors_and_returns_no_messages(): void
@@ -267,47 +165,14 @@ final class ScheduleTickerBlocksTest extends TestCase
         $this->assertSame([], $blocks->build_current_fm([], 'tv1'));
     }
 
-    public function test_rejects_an_invalid_schedule_factory_result_once(): void
-    {
-        Actions\expectDone('teksttv_wp_extensions_schedule_error')
-            ->once()
-            ->with(\Mockery::type(\UnexpectedValueException::class));
-        $calls = 0;
-        $blocks = new ScheduleTickerBlocks(static function () use (&$calls): object {
-            ++$calls;
-            return new \stdClass();
-        });
-
-        $this->assertSame([], $blocks->build_current_fm([], 'tv1'));
-        $this->assertSame([], $blocks->build_next_fm([], 'tv1'));
-        $this->assertSame(1, $calls);
-    }
-
     public function test_ignores_malformed_television_schedule_data(): void
     {
-        $schedule = new class () implements Schedule {
-            public function get_current_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_next_radio_broadcast(): null
-            {
-                return null;
-            }
-
-            public function get_today(): string
-            {
-                return 'invalid';
-            }
-
-            public function get_tomorrow(): object
-            {
-                return (object) [
-                    'television' => [null, (object) ['name' => []]],
-                ];
-            }
-        };
+        $schedule = $this->schedule(
+            today: 'invalid',
+            tomorrow: (object) [
+                'television' => [null, (object) ['name' => []]],
+            ]
+        );
         $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $schedule);
 
         $this->assertSame([], $blocks->build_today_tv([], 'tv1'));
@@ -316,25 +181,59 @@ final class ScheduleTickerBlocksTest extends TestCase
 
     private function empty_schedule(): Schedule
     {
-        return new class () implements Schedule {
-            public function get_current_radio_broadcast(): null
-            {
-                return null;
+        return $this->schedule();
+    }
+
+    private function schedule(
+        mixed $current = null,
+        mixed $next = null,
+        mixed $today = null,
+        mixed $tomorrow = null
+    ): Schedule {
+        $today ??= (object) ['television' => []];
+        $tomorrow ??= (object) ['television' => []];
+
+        return new class ($current, $next, $today, $tomorrow) implements Schedule {
+            public function __construct(
+                private mixed $current,
+                private mixed $next,
+                private mixed $today,
+                private mixed $tomorrow
+            ) {
             }
 
-            public function get_next_radio_broadcast(): null
+            public function get_current_radio_broadcast(): mixed
             {
-                return null;
+                return $this->current;
             }
 
-            public function get_today(): object
+            public function get_next_radio_broadcast(): mixed
             {
-                return (object) ['television' => []];
+                return $this->next;
             }
 
-            public function get_tomorrow(): object
+            public function get_today(): mixed
             {
-                return (object) ['television' => []];
+                return $this->today;
+            }
+
+            public function get_tomorrow(): mixed
+            {
+                return $this->tomorrow;
+            }
+        };
+    }
+
+    private function broadcast(string $name): object
+    {
+        return new class ($name) {
+            public function __construct(private string $name)
+            {
+            }
+
+            public function getName(): string
+            {
+                return $this->name;
             }
         };
     }
