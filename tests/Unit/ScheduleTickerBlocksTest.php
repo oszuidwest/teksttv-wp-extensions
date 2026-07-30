@@ -29,7 +29,7 @@ final class ScheduleTickerBlocksTest extends TestCase
 
     public function test_registers_four_ticker_types_with_expected_labels(): void
     {
-        $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $this->empty_schedule());
+        $blocks = new ScheduleTickerBlocks(fn (): Schedule => $this->empty_schedule());
         $blocks->register();
 
         $this->assertSame(
@@ -122,7 +122,7 @@ final class ScheduleTickerBlocksTest extends TestCase
 
     public function test_registry_save_and_render_callbacks_follow_the_upstream_contract(): void
     {
-        $blocks = new ScheduleTickerBlocks(static fn (): Schedule => $this->empty_schedule());
+        $blocks = new ScheduleTickerBlocks(fn (): Schedule => $this->empty_schedule());
         $blocks->register();
         $type = BlockRegistry::$types['streekomroep_ticker_current_fm'];
 
