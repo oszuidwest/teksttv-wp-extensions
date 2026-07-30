@@ -2,12 +2,11 @@
 /**
  * Plugin Name: TekstTV Streekomroep Extensions
  * Plugin URI: https://github.com/oszuidwest/teksttv-wp-extensions
- * Description: Adds ticker messages from the Streekomroep theme's radio and television schedules to TekstTV.
+ * Description: Voegt tickerberichten uit de radio- en televisieprogrammering van het Streekomroep-thema toe aan TekstTV.
  * Version: 0.0.1
  * Author: ZuidWest
  * Author URI: https://www.zuidwesttv.nl/
  * License: GPL-2.0-or-later
- * Text Domain: teksttv-wp-extensions
  * Requires at least: 7.0
  * Requires PHP: 8.3
  * Requires Plugins: teksttv

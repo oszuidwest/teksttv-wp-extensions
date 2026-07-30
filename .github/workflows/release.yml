@@ -124,7 +124,7 @@ jobs:
         with:
           php-version: '8.3'
           coverage: none
-          tools: composer:v2, wp-cli
+          tools: composer:v2
 
       - name: Install development dependencies
         if: steps.decide.outputs.release_needed == 'true'
@@ -143,21 +143,6 @@ jobs:
         env:
           TEKSTTV_PATH: upstream/teksttv
           STREEKOMROEP_PATH: upstream/streekomroep
-
-      - name: Verify translation template
-        if: steps.decide.outputs.release_needed == 'true'
-        run: |
-          wp i18n make-pot . /tmp/teksttv-wp-extensions.pot \
-            --slug=teksttv-wp-extensions \
-            --domain=teksttv-wp-extensions \
-            --include=src,teksttv-wp-extensions.php \
-            --exclude=vendor,tests,stubs,dist,upstream \
-            --skip-audit
-          sed -E '/POT-Creation-Date:|X-Generator:/d' \
-            languages/teksttv-wp-extensions.pot > /tmp/committed.pot
-          sed -E '/POT-Creation-Date:|X-Generator:/d' \
-            /tmp/teksttv-wp-extensions.pot > /tmp/generated.pot
-          diff -u /tmp/committed.pot /tmp/generated.pot
 
       - name: Configure the Plugin Check environment
         if: steps.decide.outputs.release_needed == 'true'
@@ -195,7 +180,7 @@ jobs:
             --slug=teksttv-wp-extensions \
             --exclude-files=scripts/check-coverage.php \
             --exclude-directories=stubs,tests,upstream,vendor \
-            --exclude-checks=file_type,plugin_readme,plugin_updater
+            --exclude-checks=file_type,i18n_usage,plugin_readme,plugin_updater
 
       - name: Stop the Plugin Check environment
         if: ${{ always() && steps.decide.outputs.release_needed == 'true' }}
@@ -217,7 +202,6 @@ jobs:
           grep -qx 'teksttv-wp-extensions/teksttv-wp-extensions.php' /tmp/package-files.txt
           grep -qx 'teksttv-wp-extensions/README.md' /tmp/package-files.txt
           grep -q '^teksttv-wp-extensions/src/' /tmp/package-files.txt
-          grep -q '^teksttv-wp-extensions/languages/' /tmp/package-files.txt
           if grep -Eq '/(tests|stubs|vendor|upstream|\.github|scripts)/|/(composer|phpcs|phpstan|phpunit)' /tmp/package-files.txt; then
             echo "::error::Development files found in the release package."
             cat /tmp/package-files.txt

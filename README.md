@@ -4,12 +4,12 @@ A WordPress plugin that exposes the radio and television schedules from the [Str
 
 ## Ticker types
 
-- **Now on FM** — the programme currently playing according to the radio schedule.
-- **Next on FM** — the next radio programme in the schedule.
-- **Today on TV** — one ticker message for each of today's television programmes.
-- **Tomorrow on TV** — one ticker message for each of tomorrow's television programmes.
+- **Nu op FM** — the programme currently playing according to the radio schedule.
+- **Straks op FM** — the next radio programme in the schedule.
+- **Vandaag op TV** — one ticker message for each of today's television programmes.
+- **Morgen op TV** — one ticker message for each of tomorrow's television programmes.
 
-The messages use the following prefixes: `Now on FM: …`, `Next on FM: …`, `Today on TV: …`, and `Tomorrow on TV: …`. TekstTV automatically adds its shared date and weekday scheduling controls to every type.
+The messages use the fixed Dutch prefixes `Nu op FM: …`, `Straks op FM: …`, `Vandaag op TV: …`, and `Morgen op TV: …`. The extension is Dutch-only and does not ship a gettext catalog. TekstTV automatically adds its shared date and weekday scheduling controls to every type.
 
 ## Requirements
 
@@ -39,11 +39,11 @@ composer security
 
 `composer contract` additionally verifies the extension against real checkouts of the TekstTV plugin and Streekomroep theme. Set `TEKSTTV_PATH` and `STREEKOMROEP_PATH` to those checkout directories before running it locally.
 
-CI runs PHP syntax validation, Composer validation and auditing, PHP_CodeSniffer, PHPStan, strict PHPUnit tests, WordPress Plugin Check, a 90% line-coverage gate, a deterministic POT check, and the pinned upstream contract test. PHP behavior is tested on PHP 8.3 and 8.4. GitHub Actions are pinned to immutable commits, and Dependabot checks Composer and GitHub Actions dependencies every Monday.
+CI runs PHP syntax validation, Composer validation and auditing, PHP_CodeSniffer, PHPStan, strict PHPUnit tests, WordPress Plugin Check, a 90% line-coverage gate, and the pinned upstream contract test. Plugin Check's `i18n_usage` check is intentionally excluded for this Dutch-only plugin. PHP behavior is tested on PHP 8.3 and 8.4. GitHub Actions are pinned to immutable commits, and Dependabot checks Composer and GitHub Actions dependencies every Monday.
 
 ## Release
 
-The release workflow reads the version from `teksttv-wp-extensions.php` and can only be dispatched manually from `main`. It repeats the complete quality and upstream contract gates before packaging. The allowlisted archive contains only `teksttv-wp-extensions.php`, `README.md`, `src/`, and `languages/`; tests, stubs, Composer tooling, and CI files cannot enter the release. The workflow creates a SHA-256 checksum, tags only after the package has passed validation, and refuses to overwrite an existing GitHub Release. The `force` input is limited to recovering a missing release for the current version.
+The release workflow reads the version from `teksttv-wp-extensions.php` and can only be dispatched manually from `main`. It repeats the complete quality and upstream contract gates before packaging. The allowlisted archive contains only `teksttv-wp-extensions.php`, `README.md`, and `src/`; tests, stubs, Composer tooling, and CI files cannot enter the release. The workflow creates a SHA-256 checksum, tags only after the package has passed validation, and refuses to overwrite an existing GitHub Release. The `force` input is limited to recovering a missing release for the current version.
 
 ## Behaviour
 

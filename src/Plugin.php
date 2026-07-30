@@ -54,10 +54,10 @@ final class Plugin
 
         $missing = [];
         if (!class_exists(\TekstTV\BlockRegistry::class)) {
-            $missing[] = __('TekstTV', 'teksttv-wp-extensions');
+            $missing[] = 'TekstTV';
         }
         if (!class_exists(\Streekomroep\BroadcastSchedule::class)) {
-            $missing[] = __('the Streekomroep theme', 'teksttv-wp-extensions');
+            $missing[] = 'het Streekomroep-thema';
         }
 
         if ($missing === []) {
@@ -68,8 +68,7 @@ final class Plugin
             '<div class="notice notice-warning"><p>%s</p></div>',
             esc_html(
                 sprintf(
-                    /* translators: %s: comma-separated list of missing dependencies. */
-                    __('TekstTV Streekomroep Extensions is inactive. Missing dependencies: %s.', 'teksttv-wp-extensions'),
+                    'TekstTV Streekomroep Extensions is inactief. Ontbrekende afhankelijkheden: %s.',
                     implode(', ', $missing)
                 )
             )

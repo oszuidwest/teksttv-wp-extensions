@@ -109,7 +109,7 @@ jobs:
             --slug=teksttv-wp-extensions \
             --exclude-files=scripts/check-coverage.php \
             --exclude-directories=stubs,tests,upstream,vendor \
-            --exclude-checks=file_type,plugin_readme,plugin_updater
+            --exclude-checks=file_type,i18n_usage,plugin_readme,plugin_updater
 
       - name: Stop the Plugin Check environment
         if: ${{ always() && matrix.php == '8.4' }}
@@ -140,33 +140,6 @@ jobs:
           path: coverage.xml
           retention-days: 14
           if-no-files-found: error
-
-  translations:
-    name: Translations
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
-        with:
-          php-version: '8.3'
-          coverage: none
-          tools: wp-cli
-
-      - name: Verify POT is current
-        run: |
-          wp i18n make-pot . /tmp/teksttv-wp-extensions.pot \
-            --slug=teksttv-wp-extensions \
-            --domain=teksttv-wp-extensions \
-            --include=src,teksttv-wp-extensions.php \
-            --exclude=vendor,tests,stubs,dist \
-            --skip-audit
-          sed -E '/POT-Creation-Date:|X-Generator:/d' \
-            languages/teksttv-wp-extensions.pot > /tmp/committed.pot
-          sed -E '/POT-Creation-Date:|X-Generator:/d' \
-            /tmp/teksttv-wp-extensions.pot > /tmp/generated.pot
-          diff -u /tmp/committed.pot /tmp/generated.pot
 
   contract:
     name: Upstream contract

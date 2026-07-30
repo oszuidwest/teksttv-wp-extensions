@@ -58,28 +58,28 @@ final class ScheduleTickerBlocks
     {
         $this->register_type(
             'streekomroep_ticker_current_fm',
-            __('Now on FM', 'teksttv-wp-extensions'),
+            'Nu op FM',
             'microphone',
             '#8e44ad',
             [$this, 'build_current_fm']
         );
         $this->register_type(
             'streekomroep_ticker_next_fm',
-            __('Next on FM', 'teksttv-wp-extensions'),
+            'Straks op FM',
             'controls-forward',
             '#8e44ad',
             [$this, 'build_next_fm']
         );
         $this->register_type(
             'streekomroep_ticker_today_tv',
-            __('Today on TV', 'teksttv-wp-extensions'),
+            'Vandaag op TV',
             'video-alt3',
             '#2271b1',
             [$this, 'build_today_tv']
         );
         $this->register_type(
             'streekomroep_ticker_tomorrow_tv',
-            __('Tomorrow on TV', 'teksttv-wp-extensions'),
+            'Morgen op TV',
             'calendar-alt',
             '#2271b1',
             [$this, 'build_tomorrow_tv']
@@ -124,7 +124,7 @@ final class ScheduleTickerBlocks
                 return [];
             }
 
-            return $this->message('Now on FM: ', $broadcast->getName());
+            return $this->message('Nu op FM: ', $broadcast->getName());
         });
     }
 
@@ -143,7 +143,7 @@ final class ScheduleTickerBlocks
                 return [];
             }
 
-            return $this->message('Next on FM: ', $broadcast->getName());
+            return $this->message('Straks op FM: ', $broadcast->getName());
         });
     }
 
@@ -157,7 +157,7 @@ final class ScheduleTickerBlocks
     public function build_today_tv(array $data, string $channel): array
     {
         return $this->with_schedule(
-            fn (Schedule $schedule): array => $this->television_messages('Today on TV: ', $schedule->get_today())
+            fn (Schedule $schedule): array => $this->television_messages('Vandaag op TV: ', $schedule->get_today())
         );
     }
 
@@ -171,7 +171,7 @@ final class ScheduleTickerBlocks
     public function build_tomorrow_tv(array $data, string $channel): array
     {
         return $this->with_schedule(
-            fn (Schedule $schedule): array => $this->television_messages('Tomorrow on TV: ', $schedule->get_tomorrow())
+            fn (Schedule $schedule): array => $this->television_messages('Morgen op TV: ', $schedule->get_tomorrow())
         );
     }
 
