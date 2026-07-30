@@ -6,7 +6,6 @@ namespace ZuidWest\TekstTVExtensions\Tests\Unit;
 
 use Brain\Monkey;
 use Brain\Monkey\Actions;
-use Brain\Monkey\Functions;
 use PHPUnit\Framework\TestCase;
 use RuntimeException;
 use TekstTV\BlockRegistry;
@@ -20,8 +19,6 @@ final class ScheduleTickerBlocksTest extends TestCase
         parent::setUp();
         Monkey\setUp();
         BlockRegistry::$types = [];
-
-        Functions\when('__')->returnArg();
     }
 
     protected function tearDown(): void

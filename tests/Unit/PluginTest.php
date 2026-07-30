@@ -23,7 +23,6 @@ final class PluginTest extends TestCase
         $ticker_blocks = new ReflectionProperty(Plugin::class, 'ticker_blocks');
         $ticker_blocks->setValue(null, null);
         BlockRegistry::$types = [];
-        Functions\when('__')->returnArg();
     }
 
     protected function tearDown(): void

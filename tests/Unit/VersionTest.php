@@ -45,9 +45,4 @@ final class VersionTest extends TestCase
         $this->assertSame('oszuidwest/teksttv-wp-extensions', $composer['name'] ?? null);
         $this->assertFileExists(dirname(__DIR__, 2) . '/teksttv-wp-extensions.php');
     }
-
-    public function test_plugin_does_not_ship_a_translation_catalog(): void
-    {
-        $this->assertDirectoryDoesNotExist(dirname(__DIR__, 2) . '/languages');
-    }
 }

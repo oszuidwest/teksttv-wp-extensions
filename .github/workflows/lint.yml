@@ -15,8 +15,8 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  TEKSTTV_COMMIT: 3a29ad217caecea5ea6f34a8ba12e3ce308bd2f0
-  STREEKOMROEP_COMMIT: 2628ba7ec275a4dba566e3bb15212f5ae476034c
+  TEKSTTV_COMMIT: d1e909e179ae2699a9dc306ab64c00848ee3168c
+  STREEKOMROEP_COMMIT: c25bdeb3664cd5557d1c90402ccbdc632060a582
 
 jobs:
   php:

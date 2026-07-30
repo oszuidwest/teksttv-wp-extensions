@@ -33,14 +33,6 @@
     <rule ref="WordPress.DB">
         <exclude-pattern>tests/*</exclude-pattern>
     </rule>
-    <rule ref="WordPress.WP.I18n">
-        <exclude-pattern>tests/*</exclude-pattern>
-        <properties>
-            <property name="text_domain" type="array">
-                <element value="teksttv-wp-extensions"/>
-            </property>
-        </properties>
-    </rule>
     <rule ref="WordPress.NamingConventions.PrefixAllGlobals">
         <exclude-pattern>tests/*</exclude-pattern>
         <properties>
