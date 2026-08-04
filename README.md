@@ -1,33 +1,35 @@
 # TekstTV Streekomroep Extensions
 
-A WordPress plugin that exposes the radio and television schedules from the [Streekomroep theme](https://github.com/oszuidwest/streekomroep-wp) as ticker types for the [TekstTV plugin](https://github.com/oszuidwest/teksttv-wp-plugin).
+This WordPress plugin makes the radio and television schedules from the [Streekomroep theme](https://github.com/oszuidwest/streekomroep-wp) available in [TekstTV](https://github.com/oszuidwest/teksttv-wp-plugin).
 
-## Ticker types
+It adds four ticker types:
 
-- **Nu op FM** — the programme currently playing according to the radio schedule.
-- **Straks op FM** — the next radio programme in the schedule.
-- **Vandaag op TV** — one ticker message for each of today's television programmes.
-- **Morgen op TV** — one ticker message for each of tomorrow's television programmes.
+- **Nu op FM:** the programme currently on air.
+- **Straks op FM:** the next radio programme.
+- **Vandaag op TV:** one message for each of today's television programmes.
+- **Morgen op TV:** one message for each of tomorrow's television programmes.
 
-The messages use the fixed Dutch prefixes `Nu op FM: …`, `Straks op FM: …`, `Vandaag op TV: …`, and `Morgen op TV: …`. The extension is Dutch-only and does not ship a gettext catalog. TekstTV automatically adds its shared date and weekday scheduling controls to every type.
+Messages use fixed Dutch text. TekstTV provides the shared date and weekday settings.
 
 ## Requirements
 
-- WordPress 7.0 or newer.
-- PHP 8.3 or newer.
-- The TekstTV plugin with the `TekstTV\BlockRegistry` extension API.
-- The active Streekomroep theme with `Streekomroep\BroadcastSchedule`.
+- WordPress 7.0 or newer
+- PHP 8.3 or newer
+- The TekstTV plugin
+- The active Streekomroep theme
 
-The plugin registers its ticker types on `init` at priority 10, after TekstTV registers its built-in types at priority 5. If a dependency is unavailable, the plugin registers nothing and shows an explanatory notice to administrators.
+If either dependency is missing, the ticker types are not registered and WordPress shows an admin notice.
 
 ## Installation
 
-1. Download the latest release ZIP from [GitHub Releases](https://github.com/oszuidwest/teksttv-wp-extensions/releases).
-2. Upload it through **WordPress Admin → Plugins → Add New → Upload Plugin**.
+1. Download the latest ZIP from [GitHub Releases](https://github.com/oszuidwest/teksttv-wp-extensions/releases).
+2. In WordPress, open **Plugins**, select **Add New Plugin**, and then select **Upload Plugin**.
 3. Activate **TekstTV Streekomroep Extensions**.
-4. Add the required types under **Tekst TV → Loop → Ticker messages**.
+4. Open **Tekst TV**, go to **Loop**, and add the types you need under **Ticker messages**.
 
-The production plugin has no Composer dependencies. Composer is only required for development:
+## Development
+
+Composer is only needed for development:
 
 ```bash
 composer install
@@ -35,18 +37,12 @@ composer quality
 composer security
 ```
 
-`composer contract` additionally verifies the extension against real checkouts of the TekstTV plugin and Streekomroep theme. Set `TEKSTTV_PATH` and `STREEKOMROEP_PATH` to those checkout directories before running it locally.
+Run `composer contract` to check compatibility with local checkouts of TekstTV and the Streekomroep theme. Set `TEKSTTV_PATH` and `STREEKOMROEP_PATH` to their respective directories first.
 
-CI tests PHP 8.3 and 8.4, enforces 90% line coverage, runs WordPress Plugin Check, and verifies the current upstream APIs. Plugin Check's `i18n_usage` check is excluded because the plugin is intentionally Dutch-only.
+To create a release, update the version in `teksttv-wp-extensions.php`, then run the release workflow from `main`.
 
-## Release
+## Error handling
 
-After updating the plugin header version, dispatch the release workflow from `main`. It validates the plugin and publishes an archive containing only `teksttv-wp-extensions.php`, `README.md`, and `src/`.
+If a schedule cannot be loaded, the affected ticker type returns no messages. Use the `teksttv_wp_extensions_schedule_error` hook to log these errors.
 
-## Behaviour
-
-All four builders share one `BroadcastSchedule` within a request, so the relatively expensive schedule model is not built four times.
-
-If a programme is unavailable or the schedule cannot be built, that ticker type returns no messages. The `teksttv_wp_extensions_schedule_error` hook receives the thrown `Throwable`, allowing a site to connect its own logging.
-
-TekstTV stores ticker configuration in its own options. Do not save a channel containing one of these types while this extension is deactivated: the current registry API cannot recognise an inactive type and may drop that row.
+TekstTV owns the ticker configuration. Do not edit a channel that uses these types while this plugin is inactive, as TekstTV may remove rows it does not recognise.
