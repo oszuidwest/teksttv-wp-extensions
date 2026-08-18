@@ -3,7 +3,7 @@
  * Plugin Name: TekstTV Streekomroep Extensions
  * Plugin URI: https://github.com/oszuidwest/teksttv-wp-extensions
  * Description: Voegt tickerberichten uit de radio- en televisieprogrammering van het Streekomroep-thema toe aan TekstTV.
- * Version: 0.0.1
+ * Version: 0.0.2
  * Author: ZuidWest
  * Author URI: https://www.zuidwesttv.nl/
  * License: GPL-2.0-or-later
