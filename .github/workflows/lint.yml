@@ -97,13 +97,13 @@ jobs:
         if: matrix.php == '8.4'
         run: |
           wp-env start --update
-          wp-env run cli wp plugin install plugin-check --version=2.0.0 --activate
+          wp-env run cli wp plugin install plugin-check --activate
           wp-env run cli wp plugin activate teksttv
           wp-env run cli wp plugin activate teksttv-wp-extensions
           wp-env run cli wp plugin check teksttv-wp-extensions \
             --slug=teksttv-wp-extensions \
             --exclude-files=scripts/check-coverage.php \
-            --exclude-directories=stubs,tests,upstream,vendor \
+            --exclude-directories=.phpstan-cache,stubs,tests,upstream,vendor \
             --exclude-checks=file_type,i18n_usage,plugin_readme,plugin_updater
 
       - name: Stop the Plugin Check environment
