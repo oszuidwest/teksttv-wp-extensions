@@ -14,7 +14,7 @@ Messages use fixed Dutch text. TekstTV provides the shared date and weekday sett
 ## Requirements
 
 - WordPress 7.0 or newer
-- PHP 8.3 or newer
+- PHP 8.4 or newer
 - The TekstTV plugin
 - The active Streekomroep theme
 
