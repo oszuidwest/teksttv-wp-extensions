@@ -15,7 +15,7 @@
     <ini name="error_reporting" value="E_ALL &amp; ~E_DEPRECATED"/>
 
     <config name="minimum_wp_version" value="7.0"/>
-    <config name="testVersion" value="8.3-"/>
+    <config name="testVersion" value="8.4-"/>
 
     <rule ref="Generic.Files.EndFileNewline"/>
     <rule ref="PSR12">
