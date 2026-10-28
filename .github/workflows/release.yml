@@ -113,7 +113,7 @@ jobs:
         if: steps.decide.outputs.release_needed != 'true'
         run: echo "::notice::Skipping release because the plugin version was not bumped."
 
-      - uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # v2
         if: steps.decide.outputs.release_needed == 'true'
         with:
           php-version: '8.4'
