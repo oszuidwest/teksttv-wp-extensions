@@ -144,6 +144,7 @@ jobs:
           cat > .wp-env.json <<'JSON'
           {
             "core": null,
+            "phpVersion": "8.4",
             "port": 8880,
             "testsEnvironment": false,
             "mappings": {
