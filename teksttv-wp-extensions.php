@@ -8,7 +8,7 @@
  * Author URI: https://www.zuidwesttv.nl/
  * License: GPL-2.0-or-later
  * Requires at least: 7.0
- * Requires PHP: 8.3
+ * Requires PHP: 8.4
  * Requires Plugins: teksttv
  * Update URI: https://github.com/oszuidwest/teksttv-wp-extensions
  *
